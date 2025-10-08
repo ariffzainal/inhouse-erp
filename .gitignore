@@ -1,0 +1,22 @@
+# .gitignore
+
+# --- 1. Python/Backend Secrets & Environments ---
+# Python virtual environment directory
+venv/
+# Environment variable file for secrets
+.env
+# Python compiled files
+__pycache__/
+*.pyc
+
+# --- 2. Node/Frontend Dependencies & Logs ---
+# Node dependency folder (installed via pnpm)
+node_modules/
+# pnpm store and lockfile for development
+pnpm-lock.yaml
+# Vue/Vite build output directory
+/frontend/dist
+
+# --- 3. Operating System files ---
+.DS_Store
+Thumbs.db
