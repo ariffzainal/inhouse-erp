@@ -1,22 +1,48 @@
 # .gitignore
 
-# --- 1. Python/Backend Secrets & Environments ---
-# Python virtual environment directory
-venv/
-# Environment variable file for secrets
-.env
-# Python compiled files
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
 
-# --- 2. Node/Frontend Dependencies & Logs ---
-# Node dependency folder (installed via pnpm)
+# Database
+*.db
+*.sqlite3
+
+# Environment variables (VERY IMPORTANT FOR SECURITY!)
+.env
+.env.local
+.env.*.local
+
+# Node.js
 node_modules/
-# pnpm store and lockfile for development
-pnpm-lock.yaml
-# Vue/Vite build output directory
-/frontend/dist
+dist/
+.npm
+.pnpm-store/
 
-# --- 3. Operating System files ---
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Secrets (NEVER COMMIT THESE!)
+secrets/
+*.key
+*.pem
+*.cert
+config/secrets.yaml
