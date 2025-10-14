@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import RegisterView from '@/views/RegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,10 +18,16 @@ const router = createRouter({
       meta: { requiresGuest: true }  // Only accessible if NOT logged in
     },
     {
-      path: '/dashboard',  // ← ADD THIS ROUTE
+      path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
       meta: { requiresAuth: true }  // Requires login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      meta: { requiresGuest: true }
     },
     // We'll add more routes here (register, dashboard, etc.)
   ],
