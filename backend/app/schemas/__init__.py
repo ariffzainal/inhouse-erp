@@ -14,3 +14,11 @@ from app.schemas.user import (
     Token,
     TokenData
 )
+
+from app.schemas.company import (
+    CompanyRegister,
+    CompanyUpdate,
+    CompanyResponse,
+    UserCompanyRole,
+    CompanyMemberResponse
+)

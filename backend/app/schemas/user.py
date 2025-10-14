@@ -46,6 +46,8 @@ class UserCreate(UserBase):
         max_length=100,  # Maximum 100 characters
         description="Password must be at least 8 characters"
     )
+
+    company: CompanyRegister  # ← ADD THIS
     role: Optional[UserRole] = UserRole.VIEWER  # Optional, defaults to VIEWER
 
 
