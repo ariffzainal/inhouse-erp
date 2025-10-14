@@ -5,7 +5,9 @@ Models Package
 Import all models here so they can be easily accessed.
 """
 
-from app.models.user import User, UserRole
+# app/models/__init__.py
 
-# This allows us to do: from app.models import User
-# Instead of: from app.models.user import User
+from app.models.user import User, UserRole
+from app.models.company import Company
+from app.models.company_member import CompanyMember, MemberStatus
+from app.models.invitation import Invitation, InvitationStatus

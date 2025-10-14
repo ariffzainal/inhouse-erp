@@ -77,13 +77,6 @@ class User(Base):
         nullable=False
     )
     
-    # User role (admin, manager, staff, etc.)
-    role = Column(
-        Enum(UserRole),  # Uses the UserRole enum defined above
-        default=UserRole.VIEWER,  # Default role for new users
-        nullable=False
-    )
-    
     # Is account active? (for disabling users without deleting)
     is_active = Column(
         Boolean,
