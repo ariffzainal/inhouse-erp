@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-light-neutral">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
       <div class="max-w-7xl mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold text-primary">TSB & TPS ERP Platform</h1>
           <div class="flex items-center gap-4">
-            <span class="text-gray-700">{{ authStore.user?.email }}</span>
-            <button @click="handleLogout" class="btn-secondary">
+            <span class="text-dark-neutral">{{ authStore.user?.email }}</span>
+            <button @click="handleLogout" class="bg-accent text-white px-4 py-2 rounded-md hover:bg-accent/90 transition-colors duration-200">
               Logout
             </button>
           </div>
@@ -39,7 +39,7 @@
 
         <!-- Role Card -->
         <div class="card">
-          <div class="text-sm text-gray-500 mb-1">Role</div>
+          <div class="text-sm text-dark-neutral/70 mb-1">Role</div>
           <div class="text-lg font-semibold text-primary">
             {{ authStore.user?.role }}
           </div>
@@ -47,10 +47,10 @@
 
         <!-- Status Card -->
         <div class="card">
-          <div class="text-sm text-gray-500 mb-1">Account Status</div>
+          <div class="text-sm text-dark-neutral/70 mb-1">Account Status</div>
           <div class="flex items-center">
-            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-            <span class="text-lg font-semibold text-green-600">Active</span>
+            <span class="w-2 h-2 bg-primary rounded-full mr-2"></span>
+            <span class="text-lg font-semibold text-primary">Active</span>
           </div>
         </div>
       </div>
@@ -76,8 +76,8 @@
             <span class="font-medium capitalize">{{ authStore.user?.role }}</span>
           </div>
           <div class="flex justify-between py-2 border-b">
-            <span class="text-gray-600">Account Active:</span>
-            <span class="font-medium text-green-600">{{ authStore.user?.is_active ? 'Yes' : 'No' }}</span>
+            <span class="text-dark-neutral">Account Active:</span>
+            <span class="font-medium text-primary">{{ authStore.user?.is_active ? 'Yes' : 'No' }}</span>
           </div>
           <div class="flex justify-between py-2">
             <span class="text-gray-600">Created At:</span>

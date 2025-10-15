@@ -1,20 +1,20 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-8">
+  <div class="min-h-screen flex items-center justify-center bg-dark-neutral px-4 py-8">
     <!-- Login Card -->
     <div class="max-w-md w-full">
       <!-- Logo/Header -->
       <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-primary mb-2">
-          🌙 The Skinny Bakers & theprintingshop.co ERP
+        <h1 class="text-4xl font-bold text-light-neutral mb-2 drop-shadow-md">
+          TSB & TPS ERP Platform
         </h1>
-        <p class="text-gray-600">
+        <p class="text-light-neutral drop-shadow-sm">
           Sign in to your account
         </p>
       </div>
 
       <!-- Login Form Card -->
-      <div class="card">
-        <h2 class="text-2xl font-semibold mb-6 text-gray-800">
+      <div class="card border border-light-neutral shadow-xl">
+        <h2 class="text-2xl font-semibold mb-6 text-dark-neutral">
           Login
         </h2>
 
@@ -36,7 +36,7 @@
         <form @submit.prevent="handleLogin" class="space-y-4">
           <!-- Email Field -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="email" class="block text-sm font-medium text-dark-neutral mb-2">
               Email Address
             </label>
             <input
@@ -52,7 +52,7 @@
 
           <!-- Password Field -->
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="password" class="block text-sm font-medium text-dark-neutral mb-2">
               Password
             </label>
             <input
@@ -69,10 +69,10 @@
           <!-- Remember Me (optional) -->
           <div class="flex items-center justify-between">
             <label class="flex items-center">
-              <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
-              <span class="ml-2 text-sm text-gray-600">Remember me</span>
+              <input type="checkbox" class="rounded border-dark-neutral/30 text-primary focus:ring-primary">
+              <span class="ml-2 text-sm text-dark-neutral">Remember me</span>
             </label>
-            <a href="#" class="text-sm text-primary hover:text-primary/80">
+            <a href="#" class="text-sm text-primary hover:text-accent">
               Forgot password?
             </a>
           </div>
@@ -80,7 +80,7 @@
           <!-- Login Button -->
           <button
             type="submit"
-            class="w-full btn-primary py-3 text-lg"
+            class="w-full bg-primary text-white py-3 text-lg rounded-lg hover:bg-primary/90 transition-colors duration-200"
             :disabled="authStore.loading"
           >
             <span v-if="!authStore.loading">Sign In</span>
@@ -96,9 +96,9 @@
 
         <!-- Register Link -->
         <div class="mt-6 text-center">
-          <p class="text-gray-600">
+          <p class="text-dark-neutral">
             Don't have an account?
-            <router-link to="/register" class="text-primary hover:text-primary/80 font-medium">
+            <router-link to="/register" class="text-primary hover:text-accent font-medium">
               Register here
             </router-link>
           </p>
