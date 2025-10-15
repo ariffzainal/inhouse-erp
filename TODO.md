@@ -42,10 +42,10 @@
 ## 🏗️ IN PROGRESS (Current Session)
 
 ### Backend - Multi-Company Features
-- [ ] Update registration service (create company + user as owner)
-- [ ] Update registration endpoint
-- [ ] Add company profile update endpoint
-- [ ] Add company selection endpoint (for users with multiple companies)
+- [x] Update registration service (create company + user as owner)
+- [x] Update registration endpoint
+- [x] Add company profile update endpoint
+- [x] Add company selection endpoint (for users with multiple companies)
 - [ ] Add invitation endpoints (admin invites users)
 - [ ] Update auth service for company context
 

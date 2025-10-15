@@ -139,3 +139,11 @@ class CompanyMemberResponse(BaseModel):
     joined_at: datetime
     
     model_config = ConfigDict(from_attributes=True)
+
+class CompanyListResponse(BaseModel):
+    """Schema for returning a list of companies"""
+    companies: list[CompanyResponse]
+
+class CompanySelect(BaseModel):
+    """Schema for selecting a company"""
+    company_id: int

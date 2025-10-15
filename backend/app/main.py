@@ -8,7 +8,8 @@ This is the entry point of your API server.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.auth import router as auth_router  # ← FIXED: Direct import
+from app.api.auth import router as auth_router
+from app.api.company import router as company_router # Import the new company router
 
 
 # ===== CREATE FASTAPI APPLICATION =====
@@ -32,7 +33,8 @@ app.add_middleware(
 
 
 # ===== INCLUDE ROUTERS =====
-app.include_router(auth_router)  # ← FIXED: Use imported router
+app.include_router(auth_router)
+app.include_router(company_router) # Include the new company router
 
 
 # ===== YOUR FIRST API ENDPOINT! =====

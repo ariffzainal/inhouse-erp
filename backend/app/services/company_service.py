@@ -8,7 +8,7 @@ from fastapi import HTTPException, status
 from app.models.company import Company
 from app.models.company_member import CompanyMember, MemberStatus
 from app.models.user import User, UserRole
-from app.schemas.company import CompanyRegister, CompanyUpdate
+from app.schemas.company import CompanyRegister, CompanyUpdate, CompanyResponse # Added CompanyResponse
 import re
 
 
@@ -115,9 +115,31 @@ def get_user_companies(db: Session, user_id: int):
     return results
 
 
+def get_user_companies_detailed(db: Session, user_id: int) -> list[CompanyResponse]:
+    """
+    Get all companies a user belongs to, returning detailed CompanyResponse objects.
+    """
+    results = db.query(Company, CompanyMember).join(
+        CompanyMember, 
+        Company.id == CompanyMember.company_id
+    ).filter(
+        CompanyMember.user_id == user_id,
+        CompanyMember.status == MemberStatus.ACTIVE
+    ).all()
+    
+    companies_data = []
+    for company, member in results:
+        company_response = CompanyResponse.model_validate(company)
+        # You might want to add the user's role in this company to the CompanyResponse
+        # For now, we'll just return the company details.
+        companies_data.append(company_response)
+        
+    return companies_data
+
+
 def update_company(
     db: Session, 
-    company_id: int, 
+    company: Company, # Changed from company_id to company object
     update_data: CompanyUpdate
 ) -> Company:
     """
@@ -131,8 +153,6 @@ def update_company(
     Returns:
         Updated Company object
     """
-    company = get_company_by_id(db, company_id)
-    
     # Update only provided fields
     update_dict = update_data.model_dump(exclude_unset=True)
     
@@ -143,7 +163,7 @@ def update_company(
         counter = 1
         while db.query(Company).filter(
             Company.slug == slug, 
-            Company.id != company_id
+            Company.id != company.id # Use company.id here
         ).first():
             slug = f"{base_slug}-{counter}"
             counter += 1
@@ -183,3 +203,30 @@ def check_user_company_access(
         )
     
     return member
+
+
+def set_active_company(db: Session, user: User, company_id: int) -> User:
+    """
+    Set the active company for a user.
+    
+    Args:
+        db: Database session
+        user: The authenticated user
+        company_id: The ID of the company to set as active
+        
+    Returns:
+        The updated User object
+        
+    Raises:
+        HTTPException: If the user does not have access to the company
+    """
+    member = check_user_company_access(db, user.id, company_id)
+    
+    user.current_company_id = company_id
+    user.current_company_name = db.query(Company).filter(Company.id == company_id).first().display_name
+    user.current_role = member.role.value # Store the string value of the enum
+    
+    db.commit()
+    db.refresh(user)
+    
+    return user
