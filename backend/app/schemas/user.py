@@ -13,6 +13,7 @@ from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 from app.models.user import UserRole
+from app.schemas.company import CompanyRegister
 
 
 # ===== BASE USER SCHEMA =====
@@ -89,11 +90,14 @@ class UserResponse(UserBase):
     }
     """
     id: int
-    role: UserRole
     is_active: bool
     is_verified: bool
     created_at: datetime
     updated_at: datetime
+    # Current company context (added when user selects company)
+    current_company_id: Optional[int] = None
+    current_company_name: Optional[str] = None
+    current_role: Optional[str] = None # This is where the role for the current company is stored
     
     # Pydantic V2 configuration
     model_config = ConfigDict(from_attributes=True)  # Allow ORM models

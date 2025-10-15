@@ -12,6 +12,10 @@ from app.database import get_db
 from app.schemas.user import UserCreate, UserResponse, Token
 from app.services.auth_service import create_user, authenticate_user, get_user_by_email
 from app.core.security import create_access_token, verify_token
+from app.services.company_service import get_company_by_id
+from app.dependencies import get_db, get_current_user
+from app.services import auth_service # ← ADD THIS IMPORT
+from app.services.company_service import get_company_by_id
 
 
 # ===== ROUTER SETUP =====
@@ -67,13 +71,36 @@ def register(
     db: Session = Depends(get_db)
 ):
     """
-    Register a new user account.
+    Register a new user account with company.
     
-    Accepts email, full_name, password, and role.
-    Returns created user object without password.
+    User becomes company owner automatically with admin role.
+    
+    Request Body:
+    {
+        "email": "owner@company.com",
+        "full_name": "John Doe",
+        "password": "SecurePass123!",
+        "company": {
+            "display_name": "Acme Corp",
+            "legal_name": "Acme Corporation Sdn Bhd",
+            "business_registration_number": "202301234567"
+        }
+    }
+    
+    Response: User object with company info
     """
-    user = create_user(db, user_data)
-    return user
+    user, company_id = auth_service.create_user(db, user_data)
+    
+    # Get company details to include in response
+    company = get_company_by_id(db, company_id)
+    
+    # Build response with company context
+    response = UserResponse.model_validate(user)
+    response.current_company_id = company.id
+    response.current_company_name = company.display_name
+    response.current_role = "admin" # The owner of the primary company is an admin
+    
+    return response
 
 
 # ===== ENDPOINT: LOGIN =====

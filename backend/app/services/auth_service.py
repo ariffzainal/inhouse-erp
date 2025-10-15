@@ -10,26 +10,27 @@ from fastapi import HTTPException, status
 from app.models.user import User
 from app.schemas.user import UserCreate
 from app.core.security import hash_password, verify_password, create_access_token
+from app.services.company_service import create_company_with_owner
 
 
 # ===== CREATE NEW USER =====
-def create_user(db: Session, user_data: UserCreate) -> User:
+def create_user(db: Session, user_data: UserCreate) -> tuple[User, int]:
     """
-    Create a new user account.
+    Create a new user account with company.
     
     Steps:
     1. Check if email already exists
     2. Hash the password
     3. Create user record
-    4. Save to database
-    5. Return user object
+    4. Create company with user as owner
+    5. Return user object and company_id
     
     Args:
         db: Database session
-        user_data: User registration data (email, password, name, role)
+        user_data: User registration data (includes company data)
         
     Returns:
-        Created User object
+        Tuple of (User, company_id)
         
     Raises:
         HTTPException: If email already exists
@@ -46,20 +47,28 @@ def create_user(db: Session, user_data: UserCreate) -> User:
     # Hash the password (NEVER store plain text!)
     hashed_pwd = hash_password(user_data.password)
     
-    # Create user object
+    # Create user object (WITHOUT role - role is now per-company)
     db_user = User(
         email=user_data.email,
         full_name=user_data.full_name,
         hashed_password=hashed_pwd,
-        role=user_data.role
+        is_active=True,
+        is_verified=False  # Will implement email verification later
     )
     
-    # Add to database
+    # Add user to database
     db.add(db_user)
-    db.commit()  # Save changes
-    db.refresh(db_user)  # Reload to get generated ID and timestamps
+    db.commit()
+    db.refresh(db_user)
     
-    return db_user
+    # Create company and assign user as owner
+    company, member = create_company_with_owner(
+        db=db,
+        company_data=user_data.company,
+        user=db_user
+    )
+    
+    return db_user, company.id
 
 
 # ===== AUTHENTICATE USER =====
