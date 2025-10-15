@@ -47,14 +47,26 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
     
     try {
-      await apiRegister(userData)
-      return await login(userData.email, userData.password)
+      // The backend now expects company_name nested within a 'company' object
+      const payload = {
+        email: userData.email,
+        full_name: userData.full_name,
+        password: userData.password,
+        company: {
+          display_name: userData.company_display_name,
+          legal_name: userData.company_legal_name,
+          business_registration_number: userData.business_registration_number
+        }
+      };
+      await apiRegister(payload);
+      // After successful registration, automatically log in the user
+      return await login(userData.email, userData.password);
     } catch (err) {
-      error.value = err.response?.data?.detail || 'Registration failed'
-      console.error('Register error:', err)
-      return false
+      error.value = err.response?.data?.detail || 'Registration failed';
+      console.error('Register error:', err);
+      return false;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 

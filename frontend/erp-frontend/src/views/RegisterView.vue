@@ -15,6 +15,21 @@
 
         <form @submit.prevent="handleRegister" class="space-y-4">
           <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Company Display Name</label>
+            <input v-model="form.company_display_name" type="text" required placeholder="Your Company Inc." class="input-field" :disabled="authStore.loading" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Company Legal Name</label>
+            <input v-model="form.company_legal_name" type="text" required placeholder="Your Company Sdn Bhd" class="input-field" :disabled="authStore.loading" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Business Registration Number</label>
+            <input v-model="form.business_registration_number" type="text" required placeholder="1234567-X" class="input-field" :disabled="authStore.loading" />
+          </div>
+
+          <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
             <input v-model="form.full_name" type="text" required placeholder="John Doe" class="input-field" :disabled="authStore.loading" />
           </div>
@@ -29,17 +44,6 @@
             <input v-model="form.password" type="password" required placeholder="Min 8 characters" class="input-field" :disabled="authStore.loading" />
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-            <select v-model="form.role" class="input-field" :disabled="authStore.loading">
-              <option value="viewer">Viewer</option>
-              <option value="inventory_staff">Inventory Staff</option>
-              <option value="pos_staff">POS Staff</option>
-              <option value="accountant">Accountant</option>
-              <option value="manager">Manager</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
 
           <button type="submit" class="w-full btn-primary py-3 text-lg" :disabled="authStore.loading">
             <span v-if="!authStore.loading">Create Account</span>
@@ -67,10 +71,12 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const form = ref({
+  company_display_name: '',
+  company_legal_name: '',
+  business_registration_number: '',
   email: '',
   full_name: '',
-  password: '',
-  role: 'viewer'
+  password: ''
 })
 
 const handleRegister = async () => {
