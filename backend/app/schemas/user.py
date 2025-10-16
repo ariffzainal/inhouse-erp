@@ -98,6 +98,10 @@ class UserResponse(UserBase):
     current_company_id: Optional[int] = None
     current_company_name: Optional[str] = None
     current_role: Optional[str] = None # This is where the role for the current company is stored
+
+    # Default company context (the company the user registered with)
+    default_company_id: Optional[int] = None
+    default_company_name: Optional[str] = None
     
     # Pydantic V2 configuration
     model_config = ConfigDict(from_attributes=True)  # Allow ORM models

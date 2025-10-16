@@ -16,6 +16,7 @@ from app.services.company_service import get_company_by_id
 from app.dependencies import get_db, get_current_user
 from app.services import auth_service # ← ADD THIS IMPORT
 from app.services.company_service import get_company_by_id
+from app.models.user import User # Import the User model
 
 
 # ===== ROUTER SETUP =====
@@ -99,6 +100,8 @@ def register(
     response.current_company_id = company.id
     response.current_company_name = company.display_name
     response.current_role = "admin" # The owner of the primary company is an admin
+    response.default_company_id = company.id
+    response.default_company_name = company.display_name
     
     return response
 

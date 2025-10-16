@@ -5,6 +5,7 @@ Business logic for company management.
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from typing import Optional # Import Optional
 from app.models.company import Company
 from app.models.company_member import CompanyMember, MemberStatus
 from app.models.user import User, UserRole
@@ -230,3 +231,18 @@ def set_active_company(db: Session, user: User, company_id: int) -> User:
     db.refresh(user)
     
     return user
+
+
+def get_company_member_role(db: Session, user_id: int, company_id: int) -> Optional[str]:
+    """
+    Get the role of a user within a specific company.
+    """
+    member = db.query(CompanyMember).filter(
+        CompanyMember.user_id == user_id,
+        CompanyMember.company_id == company_id,
+        CompanyMember.status == MemberStatus.ACTIVE
+    ).first()
+    
+    if member:
+        return member.role.value
+    return None

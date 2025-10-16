@@ -1,7 +1,7 @@
 // src/stores/auth.js
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { login as apiLogin, register as apiRegister, getCurrentUser } from '@/services/api'
+import { login as apiLogin, register as apiRegister, getCurrentUser, getUserCompanies, selectCompany } from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -10,16 +10,21 @@ export const useAuthStore = defineStore('auth', () => {
   const error = ref(null)
 
   const isAuthenticated = computed(() => !!token.value)
-  const userRole = computed(() => user.value?.role || null)
-  const isAdmin = computed(() => user.value?.role === 'admin')
+  const userRole = computed(() => user.value?.current_role || null)
+  const isAdmin = computed(() => user.value?.current_role === 'admin')
+  const userCompanies = ref([])
 
   function initAuth() {
     const savedToken = localStorage.getItem('token')
     const savedUser = localStorage.getItem('user')
+    const savedCompanies = localStorage.getItem('userCompanies')
     
     if (savedToken && savedUser) {
       token.value = savedToken
       user.value = JSON.parse(savedUser)
+      if (savedCompanies) {
+        userCompanies.value = JSON.parse(savedCompanies)
+      }
     }
   }
 
@@ -32,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = response.data.access_token
       localStorage.setItem('token', response.data.access_token)
       await fetchUser()
+      await fetchUserCompanies()
       return true
     } catch (err) {
       error.value = err.response?.data?.detail || 'Login failed'
@@ -59,7 +65,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
       };
       await apiRegister(payload);
-      // After successful registration, automatically log in the user
       return await login(userData.email, userData.password);
     } catch (err) {
       error.value = err.response?.data?.detail || 'Registration failed';
@@ -81,11 +86,43 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function fetchUserCompanies() {
+    try {
+      const response = await getUserCompanies()
+      userCompanies.value = response.data
+      localStorage.setItem('userCompanies', JSON.stringify(response.data))
+    } catch (err) {
+      console.error('Fetch user companies error:', err)
+      // Don't logout, just clear companies if there's an error
+      userCompanies.value = []
+      localStorage.removeItem('userCompanies')
+    }
+  }
+
+  async function switchCompany(companyId) {
+    loading.value = true
+    error.value = null
+    try {
+      const response = await selectCompany(companyId)
+      user.value = response.data
+      localStorage.setItem('user', JSON.stringify(response.data))
+      return true
+    } catch (err) {
+      error.value = err.response?.data?.detail || 'Failed to switch company'
+      console.error('Switch company error:', err)
+      return false
+    } finally {
+      loading.value = false
+    }
+  }
+
   function logout() {
     user.value = null
     token.value = null
+    userCompanies.value = []
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    localStorage.removeItem('userCompanies')
   }
 
   function clearError() {
@@ -100,10 +137,13 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     userRole,
     isAdmin,
+    userCompanies,
     initAuth,
     login,
     register,
     fetchUser,
+    fetchUserCompanies,
+    switchCompany,
     logout,
     clearError,
   }

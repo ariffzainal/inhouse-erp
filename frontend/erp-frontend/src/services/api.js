@@ -53,8 +53,24 @@ export const getCurrentUser = () => {
   return api.get('/api/v1/auth/me')
 }
 
+export const getUserCompanies = () => {
+  return api.get('/api/v1/companies/')
+}
+
+export const selectCompany = (companyId) => {
+  return api.post('/api/v1/companies/select', { company_id: companyId })
+}
+
 export const testProtected = () => {
   return api.get('/api/v1/auth/protected')
+}
+
+export const getCompanyById = (companyId) => {
+  return api.get(`/api/v1/companies/${companyId}`)
+}
+
+export const updateCompanyProfile = (companyId, companyData) => {
+  return api.put(`/api/v1/companies/${companyId}`, companyData)
 }
 
 export default api

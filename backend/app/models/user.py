@@ -105,6 +105,16 @@ class User(Base):
         onupdate=func.now(),  # Automatically update when record changes
         nullable=False
     )
+
+    # Default company associated with the user (the one they registered with)
+    default_company_id = Column(
+        Integer,
+        nullable=True # Can be null if user hasn't registered with a company yet
+    )
+    default_company_name = Column(
+        String(255),
+        nullable=True # Can be null if user hasn't registered with a company yet
+    )
     
     # ===== STRING REPRESENTATION =====
     def __repr__(self):
@@ -112,4 +122,4 @@ class User(Base):
         How to display User object when printed.
         Useful for debugging.
         """
-        return f"<User(id={self.id}, email={self.email}, role={self.role})>"
+        return f"<User(id={self.id}, email={self.email})>"

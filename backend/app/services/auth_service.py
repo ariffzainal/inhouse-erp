@@ -67,6 +67,13 @@ def create_user(db: Session, user_data: UserCreate) -> tuple[User, int]:
         company_data=user_data.company,
         user=db_user
     )
+
+    # Set the default company for the user
+    db_user.default_company_id = company.id
+    db_user.default_company_name = company.display_name
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
     
     return db_user, company.id
 

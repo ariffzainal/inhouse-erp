@@ -1,16 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import MainLayout from '@/layouts/MainLayout.vue' // Import the new layout
 import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import CompanySettingsView from '@/views/CompanySettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      redirect: '/login'  // Redirect root to login
-    },
     {
       path: '/login',
       name: 'login',
@@ -18,16 +16,33 @@ const router = createRouter({
       meta: { requiresGuest: true }  // Only accessible if NOT logged in
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: DashboardView,
-      meta: { requiresAuth: true }  // Requires login
-    },
-    {
       path: '/register',
       name: 'register',
       component: RegisterView,
       meta: { requiresGuest: true }
+    },
+    {
+      path: '/', // This will be the parent route for authenticated users
+      component: MainLayout,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '', // Default child route for '/' when authenticated
+          name: 'home-dashboard',
+          redirect: '/dashboard'
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: DashboardView,
+        },
+        {
+          path: 'company-settings/:companyId?',
+          name: 'company-settings',
+          component: CompanySettingsView,
+        }
+        // Other authenticated routes will go here
+      ]
     },
     // We'll add more routes here (register, dashboard, etc.)
   ],
@@ -46,7 +61,11 @@ router.beforeEach((to, from, next) => {
   else if (to.meta.requiresGuest && authStore.isAuthenticated) {
     // Already logged in, redirect to dashboard
     next('/dashboard')
-  } 
+  }
+  // If trying to access '/' and authenticated, redirect to dashboard
+  else if (to.path === '/' && authStore.isAuthenticated) {
+    next('/dashboard')
+  }
   else {
     // All good, proceed
     next()
