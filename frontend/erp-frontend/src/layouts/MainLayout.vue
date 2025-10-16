@@ -20,10 +20,9 @@
           <!-- User & Company Selector -->
           <div class="flex items-center gap-4">
             <!-- Company Selector Dropdown -->
-            <div class="relative" @mouseleave="showCompanyDropdown = false">
+            <div class="relative">
               <button 
                 @click="showCompanyDropdown = !showCompanyDropdown" 
-                @mouseenter="showCompanyDropdown = true"
                 class="bg-primary text-white px-4 py-2 rounded-md flex items-center hover:bg-primary/90 transition-colors duration-200"
               >
                 {{ authStore.user?.default_company_name || 'Select Company' }}
